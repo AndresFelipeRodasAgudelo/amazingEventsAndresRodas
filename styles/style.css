@@ -1,0 +1,10 @@
+*{
+    box-sizing: border-box !important; 
+    margin: 0 !important;
+}
+.img1{
+    height: 20vw;
+}
+.concert{
+    width: 90%;
+}
