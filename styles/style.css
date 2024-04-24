@@ -8,3 +8,6 @@
 .concert{
     width: 90%;
 }
+.table1 th, td{
+    border: 1px solid;
+}
