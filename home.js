@@ -194,33 +194,33 @@ const data = {
     },
   ],
 };
-console.log(data.events);
 
 let padreTarjetas = document.querySelector(".padre")
+let events = data.events
 
-// pintar(data.events, padreTarjetas)
+pintar(events, padreTarjetas)
 
-// function pintar(events, padreTarjetas) {
-//     for (let i = 0; i < events.length; i++) {
-//       creacion(padreTarjetas,events[i])
-//     }
-// }
-creacion(padreTarjetas, data.events[0])
+function pintar(events, padreTarjetas) {
+    for (let i = 0; i < events.length; i++) {
+      creacion(padreTarjetas,events[i])
+    }
+}
 
 function creacion(padreTarjetas, tarjeta) {
   let newTarget = document.createElement("div")
   newTarget.classList.add("row")
   newTarget.classList.add("padre")
+  newTarget.style.width = "18rem";
   newTarget.innerHTML = `
-  <div class="card col-md border border-success p-2 mb-2 bg-success p-2 text-dark bg-opacity-10 m-2" style="width: 18rem;">
-                <img src="${data.events[0].image}" alt="...">
+  <div class="card col-md border border-success p-2 mb-2 bg-success p-2 text-dark bg-opacity-10 " >
+                <img src="${tarjeta.image}" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title">${data.events[0].name}</h5>
-                    <p class="card-text">${data.events[0].description}</p>
+                    <h5 class="card-title">${tarjeta.name}</h5>
+                    <p class="card-text">${tarjeta.description}</p>
                 </div>
 
                 <div class="card-body">
-                    <span class="me-4">Price: ${data.events[0].price}</span>
+                    <span class="me-4">Price: ${tarjeta.price}</span>
                     <a href="/details.html" class="card-link btn btn-outline-primary">Details</a>
                 </div>
             </div>`
