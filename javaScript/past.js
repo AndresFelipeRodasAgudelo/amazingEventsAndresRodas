@@ -215,7 +215,7 @@ function creacion(padreTarjetas, tarjeta) {
     newTarget.style.width = "18rem";
     newTarget.innerHTML = `
   <div class="card col-md border border-success p-2 mb-2 bg-success p-2 text-dark bg-opacity-10 " >
-                <img src="${tarjeta.image}" alt="...">
+                <img src="${tarjeta.image}" alt="..." class= "img rounded-top">
                 <div class="card-body">
                     <h5 class="card-title">${tarjeta.name}</h5>
                     <p class="card-text">${tarjeta.description}</p>

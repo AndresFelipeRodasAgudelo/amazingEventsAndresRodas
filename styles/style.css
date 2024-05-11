@@ -18,3 +18,7 @@
     color: blue;
     background-color: white;
 }
+.img{
+    height: 12rem;
+    object-fit: cover;
+}
