@@ -201,12 +201,13 @@ let currentDate = data.currentDate
 
 pintar(events, padreTarjetas)
 
-function pintar(events, padreTarjetas){
+function pintar(events, padreTarjetas) {
+    padreTarjetas.innerHTML = ""
     for (let i = 0; i < events.length; i++) {
         if (events[i].date < currentDate) {
             creacion(padreTarjetas, events[i])
         }
-}
+    }
 }
 function creacion(padreTarjetas, tarjeta) {
     let newTarget = document.createElement("div")
@@ -228,5 +229,59 @@ function creacion(padreTarjetas, tarjeta) {
             </div>`
 
     padreTarjetas.appendChild(newTarget)
-    console.log(newTarget);
 }
+let padreChec = document.querySelector(".padreChec")
+
+function crearChec(chec, event) {
+    for (let i = 0; i < event.length; i++) {
+        let chec1 = document.createElement("div")
+        chec1.classList.add("form-check")
+        chec1.classList.add("form-check-inline")
+        chec1.innerHTML = `
+              <input class="form-check-input mt-1" name="categorys" type="checkbox" id="inlineCheckbox${i + 1}" value="${event[i]}">
+              <label class="form-check-label ms-2 " for="inlineCheckbox${i + 1}">${event[i]}</label>`
+        chec.appendChild(chec1)
+    }
+}
+
+let categorias = []
+events.forEach(event => {
+    if (!categorias.includes(event.category)) {
+        categorias.push(event.category)
+    }
+})
+
+crearChec(padreChec, categorias)
+
+    padreChec.addEventListener(`change`, (e)=>{
+        let check = document.querySelectorAll("input[type=checkbox]:checked")
+        let filtrar = events.filter(evento =>{
+            for (let i = 0; i < check.length; i++) {
+                if (check[i].value == evento.category) {
+                    return evento 
+                }               
+            }
+    })      
+        if (check.length == 0) {
+            pintar(events, padreTarjetas)
+        }else{
+            pintar(filtrar, padreTarjetas)
+        }
+        
+    })
+
+    let search = document.querySelector(".search1")
+
+    search.addEventListener(`input`, (e) =>{
+            let filtrar1 = events.filter(evento => evento.name.toLowerCase().includes(e.target.value.toLowerCase())||evento.description.toLowerCase().includes(e.target.value.toLowerCase()))
+        if (e.target.value != "") {
+            pintar(filtrar1, padreTarjetas)
+        }else{
+            pintar(events, padreTarjetas)
+        }    
+    })
+    
+
+
+
+
