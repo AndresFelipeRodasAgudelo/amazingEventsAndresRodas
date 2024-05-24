@@ -194,87 +194,75 @@ const data = {
     },
   ],
 };
-
-let padreTarjetas = document.querySelector(".padre");
 let events = data.events;
-let currentDate = data.currentDate;
-let categorias = obtenerCategorias(events);
-let urlQuemada = "http://127.0.0.1:5500/details.html"
-let urlQuemada1 = new URL(urlQuemada)
 
-pintar(events, padreTarjetas);
-crearChec(document.querySelector(".padreChec"), categorias);
+let url = window.location.href
+let url1 = new URL(url).searchParams.get("id")
 
-document.querySelector(".padreChec").addEventListener("change", filtro);
-document.querySelector(".search1").addEventListener("input", filtro);
+let padre = document.querySelector(".padre")
 
-function pintar(events, padreTarjetas) {
-    padreTarjetas.innerHTML = "";
-    for (let i = 0; i < events.length; i++) {
-            creacion(padreTarjetas, events[i]);
-    }
+for (let i = 0; i < events.length; i++) {
+  let creacion = (padre, table) => {
+    let newTable = document.createElement("div")
+    newTable.classList.add("col-md-6")
+    newTable.classList.add("align-self-center")
+    newTable.innerHTML = `
+    <img class="w-100 object-fit-cover border rounded" src="${table.image}" alt="concert">`
+    padre.appendChild(newTable);
+  
+    let newTable1 = document.createElement("div")
+    newTable1.classList.add("col-md-6")
+    newTable1.innerHTML = `
+    <h2 class="text-center">${table.name}</h2>
+    <ol class="list-group list-group-numbered">
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">date</div>
+          ${table.date}
+        </div>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">description</div>
+          ${table.description}
+        </div>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">category</div>
+          ${table.category}
+        </div>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">place</div>
+          ${table.place}
+        </div>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">capacity</div>
+          ${table.capacity}
+        </div>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">estimate</div>
+          ${table.estimate}
+        </div>
+      </li>
+      <li class="list-group-item d-flex justify-content-between align-items-start">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">price</div>
+          ${table.price}
+        </div>
+      </li>
+    </ol>`
+  
+    padre.appendChild(newTable1)
+  }
+  if (events[i]._id === url1) {
+    creacion(padre, events[i])
+  }
 }
 
-function creacion(padreTarjetas, tarjeta) {
-    let newTarget = document.createElement("div");
-    newTarget.classList.add("row");
-    newTarget.classList.add("padre");
-    newTarget.style.width = "18rem";
-    newTarget.innerHTML = `
-        <div class="card col-md border border-success p-2 mb-2 bg-success p-2 text-dark bg-opacity-10 " >
-            <img src="${tarjeta.image}" alt="..." class= "img rounded-top">
-            <div class="card-body">
-                <h5 class="card-title">${tarjeta.name}</h5>
-                <p class="card-text">${tarjeta.description}</p>
-            </div>
-
-            <div class="card-body">
-                <span class="me-4">Price: ${tarjeta.price}</span>
-                <a href="${urlQuemada1 + "?id=" + tarjeta._id}" class="card-link btn btn-outline-primary">Details</a>
-            </div>
-        </div>`;
-
-    padreTarjetas.appendChild(newTarget);
-}
-
-function obtenerCategorias(events) {
-    let categorias = [];
-    events.forEach(event => {
-        if (!categorias.includes(event.category)) {
-            categorias.push(event.category);
-        }
-    });
-    return categorias;
-}
-
-function crearChec(chec, categorias) {
-    categorias.forEach((categoria, i) => {
-        let chec1 = document.createElement("div");
-        chec1.classList.add("form-check");
-        chec1.classList.add("form-check-inline");
-        chec1.innerHTML = `
-            <input class="form-check-input mt-1" name="categorys" type="checkbox" id="inlineCheckbox${i + 1}" value="${categoria}">
-            <label class="form-check-label ms-2" for="inlineCheckbox${i + 1}">${categoria}</label>`;
-        chec.appendChild(chec1);
-    });
-}
-
-function filtro() {
-    let check = document.querySelectorAll("input[type=checkbox]:checked");
-    let searchText = document.querySelector(".search1").value.toLowerCase();
-
-    let filtrar = events.filter(evento => {
-        let matchCategoria = check.length === 0 || Array.from(check).some(chk => chk.value === evento.category);
-        let matchSearch = evento.name.toLowerCase().includes(searchText) || evento.description.toLowerCase().includes(searchText);
-        return matchCategoria && matchSearch;
-    });
-
-    if (filtrar.length === 0) {
-        padreTarjetas.innerHTML =  `
-        <div class="text-center">
-           <p>⚠No results found</p>
-        </div>`;
-    } else {
-        pintar(filtrar, padreTarjetas);
-    }
-}

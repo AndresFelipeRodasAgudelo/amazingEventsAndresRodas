@@ -195,93 +195,89 @@ const data = {
     ],
 };
 
-let padreTarjetas = document.querySelector(".padre")
-let events = data.events
-let currentDate = data.currentDate
+let padreTarjetas = document.querySelector(".padre");
+let events = data.events;
+let currentDate = data.currentDate;
+let categorias = obtenerCategorias(events);
+let urlQuemada = "http://127.0.0.1:5500/details.html"
+let urlQuemada1 = new URL(urlQuemada)
+console.log(categorias);
 
-pintar(events, padreTarjetas)
+pintar(events, padreTarjetas);
+crearChec(document.querySelector(".padreChec"), categorias);
+
+document.querySelector(".padreChec").addEventListener("change", filtro);
+document.querySelector(".search1").addEventListener("input", filtro);
 
 function pintar(events, padreTarjetas) {
-    padreTarjetas.innerHTML = ""
+    padreTarjetas.innerHTML = "";
     for (let i = 0; i < events.length; i++) {
         if (events[i].date < currentDate) {
-            creacion(padreTarjetas, events[i])
+            creacion(padreTarjetas, events[i]);
         }
     }
 }
+
 function creacion(padreTarjetas, tarjeta) {
-    let newTarget = document.createElement("div")
-    newTarget.classList.add("row")
-    newTarget.classList.add("padre")
+    let newTarget = document.createElement("div");
+    newTarget.classList.add("row");
+    newTarget.classList.add("padre");
     newTarget.style.width = "18rem";
     newTarget.innerHTML = `
-  <div class="card col-md border border-success p-2 mb-2 bg-success p-2 text-dark bg-opacity-10 " >
-                <img src="${tarjeta.image}" alt="..." class= "img rounded-top">
-                <div class="card-body">
-                    <h5 class="card-title">${tarjeta.name}</h5>
-                    <p class="card-text">${tarjeta.description}</p>
-                </div>
+        <div class="card col-md border border-success p-2 mb-2 bg-success p-2 text-dark bg-opacity-10 " >
+            <img src="${tarjeta.image}" alt="..." class= "img rounded-top">
+            <div class="card-body">
+                <h5 class="card-title">${tarjeta.name}</h5>
+                <p class="card-text">${tarjeta.description}</p>
+            </div>
 
-                <div class="card-body">
-                    <span class="me-4">Price: ${tarjeta.price}</span>
-                    <a href="/details.html" class="card-link btn btn-outline-primary">Details</a>
-                </div>
-            </div>`
+            <div class="card-body">
+                <span class="me-4">Price: ${tarjeta.price}</span>
+                <a href="${urlQuemada1 + "?id=" + tarjeta._id}" class="card-link btn btn-outline-primary">Details</a>
+            </div>
+        </div>`;
 
-    padreTarjetas.appendChild(newTarget)
-}
-let padreChec = document.querySelector(".padreChec")
-
-function crearChec(chec, event) {
-    for (let i = 0; i < event.length; i++) {
-        let chec1 = document.createElement("div")
-        chec1.classList.add("form-check")
-        chec1.classList.add("form-check-inline")
-        chec1.innerHTML = `
-              <input class="form-check-input mt-1" name="categorys" type="checkbox" id="inlineCheckbox${i + 1}" value="${event[i]}">
-              <label class="form-check-label ms-2 " for="inlineCheckbox${i + 1}">${event[i]}</label>`
-        chec.appendChild(chec1)
-    }
+    padreTarjetas.appendChild(newTarget);
 }
 
-let categorias = []
-events.forEach(event => {
-    if (!categorias.includes(event.category)) {
-        categorias.push(event.category)
-    }
-})
-
-crearChec(padreChec, categorias)
-
-    padreChec.addEventListener(`change`, (e)=>{
-        let check = document.querySelectorAll("input[type=checkbox]:checked")
-        let filtrar = events.filter(evento =>{
-            for (let i = 0; i < check.length; i++) {
-                if (check[i].value == evento.category) {
-                    return evento 
-                }               
-            }
-    })      
-        if (check.length == 0) {
-            pintar(events, padreTarjetas)
-        }else{
-            pintar(filtrar, padreTarjetas)
+function obtenerCategorias(events) {
+    let categorias = [];
+    events.forEach(event => {
+        if (!categorias.includes(event.category)) {
+            categorias.push(event.category);
         }
-        
-    })
+    });
+    return categorias;
+}
 
-    let search = document.querySelector(".search1")
+function crearChec(chec, categorias) {
+    categorias.forEach((categoria, i) => {
+        let chec1 = document.createElement("div");
+        chec1.classList.add("form-check");
+        chec1.classList.add("form-check-inline");
+        chec1.innerHTML = `
+            <input class="form-check-input mt-1" name="categorys" type="checkbox" id="inlineCheckbox${i + 1}" value="${categoria}">
+            <label class="form-check-label ms-2" for="inlineCheckbox${i + 1}">${categoria}</label>`;
+        chec.appendChild(chec1);
+    });
+}
 
-    search.addEventListener(`input`, (e) =>{
-            let filtrar1 = events.filter(evento => evento.name.toLowerCase().includes(e.target.value.toLowerCase())||evento.description.toLowerCase().includes(e.target.value.toLowerCase()))
-        if (e.target.value != "") {
-            pintar(filtrar1, padreTarjetas)
-        }else{
-            pintar(events, padreTarjetas)
-        }    
-    })
-    
+function filtro() {
+    let check = document.querySelectorAll("input[type=checkbox]:checked");
+    let searchText = document.querySelector(".search1").value.toLowerCase().trim();
 
+    let filtrar = events.filter(evento => {
+        let matchCategoria = check.length === 0 || Array.from(check).some(chk => chk.value === evento.category);
+        let matchSearch = evento.name.toLowerCase().includes(searchText) || evento.description.toLowerCase().includes(searchText);
+        return matchCategoria && matchSearch;
+    });
 
-
-
+    if (filtrar.length === 0) {
+        padreTarjetas.innerHTML =  `
+        <div class="text-center">
+           <p>⚠No results found</p>
+        </div>`;
+    } else {
+        pintar(filtrar, padreTarjetas);
+    }
+}
