@@ -6,9 +6,7 @@ fetch("https://aulamindhub.github.io/amazing-api/events.json")
     .then(res => res.json())
     .then(data => {
         events = data.events
-        console.log(data);
         currentDate = data.currentDate
-        console.log(currentDate);
         let categorias = obtenerCategorias(events);
 
         crearChec(document.querySelector(".padreChec"), categorias);
@@ -32,18 +30,14 @@ export function pintar(events, padreTarjetas) {
 export function pintarUp(events, padreTarjetas) {
     padreTarjetas.innerHTML = "";
     for (let i = 0; i < events.length; i++) {
-        if (events[i].date > currentDate) {
-            creacion(padreTarjetas, events[i]);
-        }
+        events[i].date > currentDate? creacion(padreTarjetas, events[i]) : false;
     }
 }
 
 export function pintarPast(events, padreTarjetas) {
     padreTarjetas.innerHTML = "";
     for (let i = 0; i < events.length; i++) {
-        if (events[i].date < currentDate) {
-            creacion(padreTarjetas, events[i]);
-        }
+        events[i].date < currentDate? creacion(padreTarjetas, events[i]) : false;
     }
 }
 
@@ -70,9 +64,7 @@ export function creacion(padreTarjetas, tarjeta) {
 export function obtenerCategorias(events) {
     let categorias = [];
     events.forEach(event => {
-        if (!categorias.includes(event.category)) {
-            categorias.push(event.category);
-        }
+        !categorias.includes(event.category)? categorias.push(event.category) : false;
     });
     return categorias;
 }
@@ -100,12 +92,8 @@ export function filtro(events) {
         return matchCategoria && matchSearch;
     });
 
-    if (filtrar.length === 0) {
-        padreTarjetas.innerHTML = `
+    filtrar.length === 0? padreTarjetas.innerHTML = `
       <div class="text-center">
         <p>⚠ No results found</p>
-      </div>`;
-    } else {
-        pintar(filtrar, padreTarjetas);
-    }
+      </div>` : pintar(filtrar, padreTarjetas);    
 }

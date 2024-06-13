@@ -3,7 +3,6 @@ fetch("https://aulamindhub.github.io/amazing-api/events.json")
   .then(data => {
     let events = data.events
     let currandate = data.currentDate
-    console.log(data);
 
     let past = []
     events.forEach(element => {
@@ -29,10 +28,8 @@ fetch("https://aulamindhub.github.io/amazing-api/events.json")
     events.forEach(e => {
       e.date > currandate ? up.push(e) : false;
     })
-    console.log(up);
 
     let categorys = []
-    console.log(categorys);
     for (let i = 0; i < up.length; i++) {
       categorys.push(up[i].category)
     }
@@ -64,10 +61,8 @@ fetch("https://aulamindhub.github.io/amazing-api/events.json")
     events.forEach(e => {
       e.date < currandate ? pastEvents.push(e) : false;
     })
-    console.log(pastEvents);
 
     let categorysPast = pastEvents.map(e => e.category)
-    console.log(categorysPast);
 
     let perceFood = pastEvents[0].assistance + pastEvents[6].assistance + pastEvents[7].assistance + pastEvents[8].assistance + pastEvents[9].assistance + pastEvents[10].assistance
     let foodPrice = pastEvents[0].price + pastEvents[6].price + pastEvents[7].price + pastEvents[8].price + pastEvents[9].price + pastEvents[10].price
@@ -203,7 +198,4 @@ fetch("https://aulamindhub.github.io/amazing-api/events.json")
           </tr>
         </tfoot>
       </table>`
-    console.log(padre);
-
   })
-
