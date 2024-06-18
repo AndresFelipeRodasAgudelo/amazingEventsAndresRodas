@@ -8,13 +8,8 @@ fetch("https://aulamindhub.github.io/amazing-api/events.json")
         events = data.events
         currentDate = data.currentDate
         let categorias = obtenerCategorias(events);
-
         crearChec(document.querySelector(".padreChec"), categorias);
-        filtro(events);
         obtenerCategorias(events)
-
-        document.querySelector(".padreChec").addEventListener("change", () => filtro(events));
-        document.querySelector(".search1").addEventListener("input", () => filtro(events));
     });
 
 export let urlQuemada = "http://127.0.0.1:5500/details.html";
@@ -30,14 +25,14 @@ export function pintar(events, padreTarjetas) {
 export function pintarUp(events, padreTarjetas) {
     padreTarjetas.innerHTML = "";
     for (let i = 0; i < events.length; i++) {
-        events[i].date > currentDate? creacion(padreTarjetas, events[i]) : false;
+        events[i].date > currentDate ? creacion(padreTarjetas, events[i]) : false;
     }
 }
 
 export function pintarPast(events, padreTarjetas) {
     padreTarjetas.innerHTML = "";
     for (let i = 0; i < events.length; i++) {
-        events[i].date < currentDate? creacion(padreTarjetas, events[i]) : false;
+        events[i].date < currentDate ? creacion(padreTarjetas, events[i]) : false;
     }
 }
 
@@ -64,7 +59,7 @@ export function creacion(padreTarjetas, tarjeta) {
 export function obtenerCategorias(events) {
     let categorias = [];
     events.forEach(event => {
-        !categorias.includes(event.category)? categorias.push(event.category) : false;
+        !categorias.includes(event.category) ? categorias.push(event.category) : false;
     });
     return categorias;
 }
@@ -79,21 +74,4 @@ export function crearChec(chec, categorias) {
       <label class="form-check-label ms-2" for="inlineCheckbox${i + 1}">${categoria}</label>`;
         chec.appendChild(chec1);
     });
-}
-
-export function filtro(events) {
-
-    let check = document.querySelectorAll("input[type=checkbox]:checked");
-    let searchText = document.querySelector(".search1").value.toLowerCase().trim();
-
-    let filtrar = events.filter(evento => {
-        let matchCategoria = check.length === 0 || Array.from(check).some(chk => chk.value === evento.category);
-        let matchSearch = evento.name.toLowerCase().includes(searchText) || evento.description.toLowerCase().includes(searchText);
-        return matchCategoria && matchSearch;
-    });
-
-    filtrar.length === 0? padreTarjetas.innerHTML = `
-      <div class="text-center">
-        <p>⚠ No results found</p>
-      </div>` : pintar(filtrar, padreTarjetas);    
 }
